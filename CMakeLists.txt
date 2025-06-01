@@ -54,6 +54,8 @@ add_executable(ArtifactInentory main.cpp
         include/ui/MainWindow.h
         src/ui/ArtifactDialog.cpp
         include/ui/ArtifactDialog.h
+        src/filters/NameFilter.cpp
+        include/filters/NameFilter.h
 )
 
 target_link_libraries(ArtifactInentory

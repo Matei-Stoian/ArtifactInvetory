@@ -14,6 +14,7 @@
 #include "../../include/filters/LocationFilter.h"
 #include "../../include/filters/AndFilter.h"
 #include "../../include/filters/OrFilter.h"
+#include "../../include/filters/NameFilter.h"
 #include <QApplication>
 #include <QMessageBox>
 #include <QHeaderView>
@@ -268,8 +269,7 @@ void MainWindow::applyFilters() {
 
     // Name filter (searches in artifact name)
     if (!nameFilter_->text().isEmpty()) {
-        // We'll use a custom approach since we don't have a NameFilter class
-        // For simplicity, we'll filter after getting results
+        filters.push_back(std::make_unique<NameFilter>(nameFilter_->text()));
     }
 
     // Type filter
@@ -312,14 +312,6 @@ void MainWindow::applyFilters() {
         results = controller_->filterArtifacts(*combinedFilter);
     }
 
-    // Apply name filter manually (simple approach)
-    if (!nameFilter_->text().isEmpty()) {
-        auto nameText = nameFilter_->text();
-        results.erase(std::remove_if(results.begin(), results.end(),
-            [&nameText](const std::unique_ptr<Artifact>& artifact) {
-                return !artifact->getName().contains(nameText, Qt::CaseInsensitive);
-            }), results.end());
-    }
 
     populateTable(results);
     statusBar()->showMessage(QString("Filter applied - %1 artifacts found").arg(results.size()), 2000);
